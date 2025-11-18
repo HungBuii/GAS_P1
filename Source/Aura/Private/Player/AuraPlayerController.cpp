@@ -34,5 +34,16 @@ void AAuraPlayerController::SetupInputComponent()
 
 void AAuraPlayerController::Move(const FInputActionValue& Value)
 {
-	UE_LOG(LogTemp, Warning, TEXT("HitComp: %s"), *Value.ToString());
+	const FVector2D InputAxisVector = Value.Get<FVector2D>();
+	const FRotator Rotation = GetControlRotation();
+	const FRotator YawRotation(0.f, Rotation.Yaw, 0.f);
+
+	const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X); // local space coordinate
+	const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+
+	if (APawn* ControlledPawn = GetPawn<APawn>())
+	{
+		ControlledPawn->AddMovementInput(ForwardDirection, InputAxisVector.Y); // world space coordinate
+		ControlledPawn->AddMovementInput(RightDirection, InputAxisVector.X);
+	}
 }
