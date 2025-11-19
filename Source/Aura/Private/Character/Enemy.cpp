@@ -35,4 +35,7 @@ void AEnemy::UnHighlightActor()
 void AEnemy::BeginPlay()
 {
 	Super::BeginPlay();
+	
+	// Init ability actor info the Client and Server
+	AbilitySystemComponent->InitAbilityActorInfo(this, this);
 }
